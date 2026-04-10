@@ -5,20 +5,23 @@ async function fetchCategories(req, res) {
     try {
         const categories = await model.getAllCategories();
         res.json(categories);
-    } catch (err){
+    } catch (err) {
         console.error(err);
         res.status(500).send("Server error");
     }
 }
 
-async function fetchJokesByCategories(req, res) {
-    const category = req.params.categories;
 
-    if(categories){
+async function fetchJokesByCategories(req, res) {
+    const category = req.params.category;
+
+    
+
+    if (category) {
         try {
             const jokes = await model.getJokesByCategory(category);
-            
-            if(joke.length == 0){
+
+            if (jokes.length == 0) {
                 return res.status(404).send("Invalid Category");
             }
 
@@ -27,7 +30,7 @@ async function fetchJokesByCategories(req, res) {
             console.error(err);
             res.status(500).send("Server error");
         }
-    }else{
+    } else {
         res.status(400).send("Missing required category param!");
     }
 }
@@ -43,9 +46,9 @@ async function fetchRandomJoke(req, res) {
 }
 
 async function createJoke(req, res) {
-    const {category, setup, delivery} = req.body;
+    const { category, setup, delivery } = req.body;
 
-    if(category && setup && delivery){
+    if (category && setup && delivery) {
         try {
             const newJoke = await model.addJoke(category, setup, delivery);
             res.status(201).json(newJoke);
@@ -53,14 +56,14 @@ async function createJoke(req, res) {
             console.error(err);
             res.status(500).send("Server error");
         }
-    }else{
+    } else {
         res.status(400).send("Missing required fields!")
     }
 }
 
 module.exports = {
     fetchCategories,
-    fetchJokesByCategory,
+    fetchJokesByCategories,
     fetchRandomJoke,
     createJoke
 };

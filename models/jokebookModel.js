@@ -1,7 +1,7 @@
 "use strict";
 const pool = require('./dbConnection');
 
-async function getCategories() {
+async function getAllCategories() {
     const queryText = "SELECT name FROM categories";
     const result = await pool.query(queryText);
     return result.rows;
@@ -17,6 +17,7 @@ async function getJokesByCategory(category) {
 
     const values = [category];
     const result = await pool.query(queryText, values);
+    return result.rows;
 }
 
 async function getRandomJoke() {
@@ -26,6 +27,9 @@ async function getRandomJoke() {
         ORDER BY RANDOM()
         LIMIT 1
     `;
+
+    const result = await pool.query(queryText);
+    return result.rows[0];
 }
 
 async function addJoke(category, setup, delivery) {
@@ -37,7 +41,7 @@ async function addJoke(category, setup, delivery) {
         `;
     const catResult = await pool.query(catQuery, [category]);
 
-    if(catResult.rows.length == 0){
+    if (catResult.rows.length == 0) {
         throw new Error("Category not found!");
     }
 
